@@ -9,7 +9,7 @@
 import UIKit
 
 class ViewController: UIViewController {
-    
+        
     var operations = ""
     var outputText = ""
     var opon = true
@@ -17,6 +17,8 @@ class ViewController: UIViewController {
     var avgon = false
     var counton = false
     var endon = false
+    var history = [String]()
+
     
     func clear() {
         operations = ""
@@ -91,8 +93,8 @@ class ViewController: UIViewController {
     
     @IBAction func opfact(_ sender: UIButton) {
         if opon == false && operations.components(separatedBy: " ").count == 1 {
-                print(operations)
-
+            print(operations)
+            var label = operations;
             var result = 1
             let startnum = Int(Double(operations)!)//Int(operations)!
             if (startnum > 0) {
@@ -101,6 +103,10 @@ class ViewController: UIViewController {
                 }
             }
             outputText = "\(result)"
+            label = "\(label) fact = \(result)"
+            history.append(label)
+            print(label)
+            print(history)
             output.text = outputText
             
             clear()
@@ -145,12 +151,15 @@ class ViewController: UIViewController {
     @IBAction func opeql(_ sender: UIButton) {
         if opon == false {
             print(operations)
+            var label = operations
             let ops = operations.components(separatedBy: " ")
             if ops.count > 1 {
                 var num = Double(ops[0])!
                 if ops[1] == "count" {
                     operations = "\(ops.count / 2 + 1)"
                     output.text = operations
+                    label = "\(label) = \(ops.count / 2 + 1)"
+                    history.append(label)
                 } else {
                     for index in stride(from: 1, to: ops.count - 1, by: 2) {
                         switch ops[index] {
@@ -171,10 +180,14 @@ class ViewController: UIViewController {
                                 }
                         }
                     }
+                    label = "\(label) = \(num)"
+                    history.append(label)
                     operations = "\(num)"
                     output.text = operations
                 }
             } else {
+                label = "\(label) = \(Double(ops[0])!)"
+                history.append(label)
                 operations = "\(Double(ops[0])!)"
                 output.text = operations
             }
@@ -322,6 +335,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+       
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -330,6 +344,10 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let hvc = segue.destination as! HistoryViewController
+        hvc.history = history
+    }
 
 }
 
